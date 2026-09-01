@@ -12,7 +12,6 @@ export async function GET() {
       success: true,
       models: models.data.map((model) => ({
         id: model.id,
-        active: model.active,
         owned_by: model.owned_by,
       })),
     });

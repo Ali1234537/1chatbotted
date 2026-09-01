@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -44,7 +45,7 @@ export default function ChatBox({
     const container =
       chatContainerRef.current;
 
-    if (!container) {
+    if (container === null) {
       return;
     }
 
@@ -75,11 +76,9 @@ export default function ChatBox({
     if (
       !userScrolledUpRef.current
     ) {
-      bottomRef.current?.scrollIntoView(
-        {
-          behavior: "smooth",
-        }
-      );
+      bottomRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
     }
   }, [messages]);
 
@@ -170,11 +169,6 @@ export default function ChatBox({
 
       let fullResponse = "";
 
-      /*
-        Receive the complete answer
-        from Groq first.
-      */
-
       while (true) {
         const {
           value,
@@ -193,18 +187,13 @@ export default function ChatBox({
         fullResponse += chunk;
       }
 
-      /*
-        Now type the answer slowly.
-      */
-
       await typeResponse(
         fullResponse,
         controller.signal
       );
     } catch (error) {
       if (
-        error instanceof
-          DOMException &&
+        error instanceof DOMException &&
         error.name === "AbortError"
       ) {
         return;
@@ -226,12 +215,14 @@ export default function ChatBox({
             ...currentMessages,
           ];
 
-          updated[
-            updated.length - 1
-          ] = {
-            role: "assistant",
-            content: `**Error:** ${errorMessage}`,
-          };
+          if (updated.length > 0) {
+            updated[
+              updated.length - 1
+            ] = {
+              role: "assistant",
+              content: `**Error:** ${errorMessage}`,
+            };
+          }
 
           return updated;
         }
@@ -265,25 +256,18 @@ export default function ChatBox({
             ...currentMessages,
           ];
 
-          updated[
-            updated.length - 1
-          ] = {
-            role: "assistant",
-            content: displayedText,
-          };
+          if (updated.length > 0) {
+            updated[
+              updated.length - 1
+            ] = {
+              role: "assistant",
+              content: displayedText,
+            };
+          }
 
           return updated;
         }
       );
-
-      /*
-        Typing speed.
-
-        20 = fast
-        30 = natural
-        40 = slow
-        50 = very slow
-      */
 
       await new Promise(
         (resolve) =>
@@ -394,3 +378,4 @@ export default function ChatBox({
     </div>
   );
 }
+
