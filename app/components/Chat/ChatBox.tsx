@@ -42,14 +42,14 @@ export default function ChatBox({
     useRef(false);
 
   useEffect(() => {
-    const container =
-      chatContainerRef.current;
-
-    if (container === null) {
-      return;
-    }
-
     function handleScroll() {
+      const container =
+        chatContainerRef.current;
+
+      if (!container) {
+        return;
+      }
+
       const distanceFromBottom =
         container.scrollHeight -
         container.scrollTop -
@@ -57,6 +57,13 @@ export default function ChatBox({
 
       userScrolledUpRef.current =
         distanceFromBottom > 100;
+    }
+
+    const container =
+      chatContainerRef.current;
+
+    if (!container) {
+      return;
     }
 
     container.addEventListener(
@@ -297,8 +304,6 @@ export default function ChatBox({
         dark:text-white
       "
     >
-      {/* Chat area */}
-
       <div
         ref={chatContainerRef}
         className="
@@ -318,8 +323,6 @@ export default function ChatBox({
             gap-4
           "
         >
-          {/* Empty chat */}
-
           {messages.length === 0 && (
             <div
               className="
@@ -341,8 +344,6 @@ export default function ChatBox({
             </div>
           )}
 
-          {/* Messages */}
-
           {messages.map(
             (message, index) => (
               <ChatMessage
@@ -352,8 +353,6 @@ export default function ChatBox({
               />
             )
           )}
-
-          {/* Typing indicator */}
 
           {isGenerating &&
             messages[
@@ -367,8 +366,6 @@ export default function ChatBox({
           <div ref={bottomRef} />
         </div>
       </div>
-
-      {/* Input */}
 
       <ChatInput
         onSend={sendMessage}
